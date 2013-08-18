@@ -3,3 +3,6 @@ api/app/cache/*
 api/app/lib/Config.php
 blog/wp-config.php
 blog/wp-content/uploads/*
+Capfile
+config/deploy.rb
+config/deploy/*
