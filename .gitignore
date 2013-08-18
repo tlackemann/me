@@ -1,0 +1,5 @@
+api/app/cache/*
+.DS_Store
+api/app/lib/Config.php
+blog/wp-config.php
+blog/wp-content/uploads/*

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Thomas Lackemann \ Software Engineer</title>
+        <meta name="description" content="Thomas Lackemann is a web developer and software enginner in NYC">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script type="text/javascript" src="http://fast.fonts.net/jsapi/2b75caee-ef9e-4ece-a1d6-44b8af98db50.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <header class="tom-header clearfix">
+            <div class="tom-page">
+                <span class="tom-name">
+                    Thomas Lackemann
+                </span>
+                <span class="tom-subname">
+                    Designing, engineering, &amp; optimizing powerful web applications in NYC
+                </span>
+
+                <nav class="tom-nav clearfix">
+                    <ul id="main-nav">
+                        <li><a href="#" class="tom-filter-active">Home</a></li>
+                        <li><a href="blog/" class="tom-filter-inactive">Blog</a></li>
+                        <li><a href="#" class="tom-filter-inactive">Projects</a></li>
+                        <li><a href="#" class="tom-filter-inactive">About</a></li>
+                        <li><a href="#" class="tom-filter-inactive">Contact</a></li>
+                    </ul>
+                    <ul id="main-filters">
+                        <li><span>Filters:</span></li>
+                        <li><a href="#" class="tom-filter-active" data-tom-type="rss">Posts</a></li>
+                        <li><a href="#" class="tom-filter-active" data-tom-type="instagram">Instagram</a></li>
+                        <li><a href="#" class="tom-filter-active" data-tom-type="twitter">Twitter</a></li>
+                        <li><a href="#" class="tom-filter-active" data-tom-type="events">Events</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        
+        <div class="tom-ajax"></div>
+
+        <div class="tom-page clearfix" id="main">
+            <!-- Dynamically loaded content -->
+        </div>
+
+        <div class="tom-page">
+            <a href="#" class="tom-load-more">Load More</a>
+        </div>
+
+        <footer class="tom-footer">
+            <div class="tom-topfooter">
+                <div class="tom-page clearfix">
+                    <div class="tom-block tom-col-1">
+                        <span class="tom-block-title">Contact Me</span>
+                            <form action="/">
+                                <fieldset>
+                                    <label for="name">Name</label>
+                                    <input placeholder="Your name" name="Contact[name]" class="form-text required-entry"/>
+                                </fieldset>
+                                
+                                <fieldset>
+                                    <label for="email">Email</label>
+                                    <input placeholder="you@yoursite.com" name="Contact[email]" class="form-text required-entry"/>
+                                </fieldset>
+
+                                <fieldset>
+                                    <label for="email">Subject</label>
+                                    <input placeholder="Just saying hi" name="Contact[subject]" class="form-text required-entry"/>
+                                </fieldset>
+
+                                <fieldset>
+                                    <label for="email">Message</label>
+                                    <textarea name="Contact[message]" class="form-text required-entry"></textarea>
+                                </fieldset>
+
+                                <fieldset class="form-actions">
+                                    <input type="submit" value="Submit" />
+                                </fieldset>
+                            </form>  
+                        
+                    </div>
+
+                    <div class="tom-block tom-col-2">
+                        <span class="tom-block-title">Who Is Tommy?</span>
+                        <p>Tom began programming when he was 12-years-old. Being self-taught, he found every chance to pick up some of the web's latest technologies and implement them into a vast array of projects ranging from personal blogs to full-featured social networks. His entrepreneural attitude and excitement for new opportunities lead him to work for Pixafy where he happily hacks away at the latest and greatest ventures. Tom grew up on Long Island, spends his free time with his beast of a golden retriever, Riley, and has a slight obsession with good craft beers.</p>
+                    </div>
+
+                    <div class="tom-block tom-col-3">
+                        <span class="tom-block-title">Supported by</span>
+                        <a href="https://www.herculo.com" target="_blank" class="tom-thanks-logo"><img id="img-herculo" src="img/herculo-logo.png"/></a>
+                        <a href="http://www.pixafy.com" target="_blank" class="tom-thanks-logo"><img id="img-pixafy" src="img/pixafy-logo.png"/></a>
+                    </div>
+                </div>
+            </div>
+            <div class="tom-bottomfooter clearfix">
+                <div class="tom-page clearfix">
+                
+                    <nav class="tom-bottom-nav">
+                        <ul>
+                            <li><a href="#" class="tom-filter-active">Blog</a></li>
+                            <li><a href="#" class="tom-filter-active">Social</a></li>
+                            <li><a href="#" class="tom-filter-active">Projects</a></li>
+                            <li><a href="#" class="tom-filter-active">About</a></li>
+                            <li><a href="#" class="tom-filter-active">Contact</a></li>
+                        </ul>
+                    </nav>
+                    <span class="tom-footer-copyright">
+                        <span class="tom-footer-name">Thomas Lackemann</span> &copy; 2013
+                    </span>
+                </div>
+            </div>
+        </footer>
+
+        
+        <script src="js/vendor/jquery-1.9.1.min.js"></script>
+        <script src="js/plugins.js"></script>
+        <script src="js/vendor/masonry.pkgd.min.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-43143962-1', 'whoistom.me');
+          ga('send', 'pageview');
+
+        </script>
+
+        
+    </body>
+</html>
