@@ -19,7 +19,7 @@
 			'twitter'		: 0,
 			'instagram'		: 0,
 			'rss'			: 1,
-			'events'		: 1
+			'events'		: 0
 		},
 
 		this.fullScreen = true,	
@@ -35,19 +35,17 @@
 		this.defaultPageWidth = 1020,
 		this.html = [],
 		this.container = '#main',
-		this.limit = 15,
+		this.limit = 16,
 		this.loadMore = false,
 		this._offset = 0,
 		this._currentColumns = 0,
 		this._skipPriorities = 0,
+		this._data = '',
+		this._search = '',
 		this.currentColumnWidth = 0,
 
 
 		this.callApi = function() {
-			// clear any data if any exists
-			$(this.container).html('');
-			this.html = [];
-
 			// determine which methods to run
 			var _params = '?';
 			for(var method in this.methods)
@@ -65,8 +63,18 @@
 				dataType: 'json',
 				success: function(data)
 				{
-					self.renderTimeline(data);
-					//self.initiateMasonry();
+					self._data = data;
+
+					// obey search parameters if we have any
+					// at this point it's easier to filter everything through js
+					// if this is a bad idea then i'll switch to php searching and multiple ajax calls
+					if (self._search) {
+						self.search(self._search);
+					}
+					else
+					{
+						self.renderTimeline(data);
+					}
 				}
 			});
 		},
@@ -81,6 +89,10 @@
 		},
 
 		this.renderTimeline = function(data) {
+			// clear any data if any exists
+			$(this.container).html('');
+			this.html = [];
+
 			var i = 0;
 			var t = 0;
 
@@ -264,7 +276,6 @@
 				}
 				else
 				{
-					//console.log(window.innerWidth / 3);
 					$columnWidth = $windowWidth / this._currentColumns;
 				}
 				this.currentColumnWidth = $columnWidth;
@@ -300,6 +311,9 @@
 			});
 			var elems = [];
 			var fragment = document.createDocumentFragment();
+
+			// Reset load more
+			this.setLoadMore(false);
 			for (var e in this.html)
 			{
 				var elem = this.html[e];
@@ -309,7 +323,6 @@
 				}
 				else
 				{
-
 					fragment.appendChild( elem );
 					elems.push( elem );
 					this._offset++;
@@ -330,10 +343,17 @@
 				msnry.appended( elems )
 				self.killAjaxLoader();
 
+
+				var loadMore = document.querySelector('.tom-load-more');
+
 				if (self.canLoadMore() == true)
 				{
-					var loadMore = document.querySelector('.tom-load-more');
 					loadMore.style.display = 'block';
+				} else {
+					// why doesn't this work?
+					//loadMore.style.display = 'none';
+					// blahh
+					$('.tom-load-more').hide();
 				}
 			}, 1000);
 			
@@ -357,7 +377,7 @@
 					elems.push( elem );
 					this._offset++;
 					i++;
-					//console.log(this.html.length);
+
 					var count = parseInt(e);
 					if (count + 1 >= this.html.length)
 					{
@@ -422,10 +442,77 @@
 		this.canLoadMore = function()
 		{
 			return this.loadMore;
+		},
+		/** 
+		 * Search our JSON array 
+		 *
+		 */
+		this.search = function(search)
+		{
+			this.startAjaxLoader();
+
+			// set the global (if we change filters)
+			this._search = search;
+
+			if (search)
+			{
+				var regEx = search;
+				var re = new RegExp(regEx, "gi");
+				var data = this._data;
+				var returnData = [];
+				for (var entry in data)
+				{
+					if (data[entry].rss !== undefined && this.methods.rss == true)
+					{
+						var content = data[entry].rss.description;
+						var search = content.match(re);
+						if (search !== null)
+						{
+							returnData[entry] = data[entry];
+						}
+					}
+					if (data[entry].instagram !== undefined && this.methods.instagram == true)
+					{
+						var content = data[entry].instagram.caption.text;
+						var search = content.match(re);
+						if (search !== null)
+						{
+							returnData[entry] = data[entry];
+						}
+					}
+					if (data[entry].twitter !== undefined && this.methods.twitter == true)
+					{
+						var content = data[entry].twitter.tweet.text;
+						var search = content.match(re);
+						if (search !== null)
+						{
+							returnData[entry] = data[entry];
+						}
+					}
+					if (data[entry].events !== undefined && this.methods.events == true)
+					{
+						var content = data[entry].events.name;
+						var search = content.match(re);
+						if (search !== null)
+						{
+							returnData[entry] = data[entry];
+						}
+					}
+				}
+
+				this.renderTimeline(returnData);
+			}
+			else
+			{
+				returnData = this._data;
+				this.renderTimeline(returnData);
+			}
 		}
+
 
 	}
 
+	
 	
 
 	if (!window.TOM)
@@ -466,6 +553,13 @@ docReady(function() {
 		msnry.appended( elems );
 		
 		//setTimeout(function() { msnry.layout() }, 500);
+	});
+
+	// Search form for the wall
+	$('body').on('submit', '#tom-search', function(e) {
+		e.preventDefault();
+
+		window.TOM.search($('#tom-search-q').val());
 	});
 
 	// Some responsive js
