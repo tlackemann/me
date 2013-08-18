@@ -16,9 +16,9 @@
 		},
 
 		this.priority = {
-			'twitter'		: 1,
-			'instagram'		: 1,
-			'rss'			: 2,
+			'twitter'		: 0,
+			'instagram'		: 0,
+			'rss'			: 1,
 			'events'		: 1
 		},
 
@@ -29,7 +29,7 @@
 		// 	'<920' : 3,
 		// 	'<500' : 1,
 		// },
-		this.pagePadding = 20, 
+		this.pagePadding = 30, 
 		this.ajaxLoader = '.tom-ajax',
 		this.defaultColumnWidth = 340,
 		this.defaultPageWidth = 1020,
@@ -97,7 +97,12 @@
 
 					var html = '';
 					//this.html[i] =
-					html += '<a href="' + rss.link + '" target="_blank" class="tom-tile tom-rss tom-priority-1"><span class="tom-rss">';
+					var classes = "tom-tile";
+					classes += " tom-rss";
+					classes += (this.priority.rss) ? " tom-priority-" + this.priority.rss : '';
+					classes += (i == 0) ? " first" : '';
+
+					html += '<a href="' + rss.link + '" target="_blank" class="' + classes + '"><span class="tom-rss">';
 					html += '<span class="tom-pixafy">' + rss.title + '</span><span class="tom-divider"></span>' + 
 								htmlDecode(rss.description + '') +
 							'<span class="tom-divider"></span>';
@@ -124,8 +129,13 @@
 					var postDate = new Date(parseInt(instagram.caption.created_time) * 1000);
 					var amPm = (postDate.getHours() < 12) ? 'am' : 'pm';
 					var hours = (postDate.getHours() >= 12) ? ('0' + (postDate.getHours()-11)).slice(-2) : ('0' + (postDate.getHours()+1)).slice(-2) ;
+					
+					var classes = "tom-tile";
+					classes += " tom-instagram";
+					classes += (this.priority.instagram) ? " tom-priority-" + this.priority.instagram : '';
+					classes += (i == 0) ? " first" : '';
 					e.innerHTML =
-						'<div class="tom-tile"><div class="tom-instagram">' +
+						'<div class="' + classes + '"><div class="tom-instagram">' +
 							'<img src="' + instagram.images.low_resolution.url + '"/>' +
 							'<span class="tom-title">' + instagram.caption.text + '</span>' +
 							'<div class="tom-divider"></div>' + 
@@ -141,13 +151,37 @@
 					var postDate = new Date(twitter.created_at);
 					var amPm = (postDate.getHours() < 12) ? 'am' : 'pm';
 					var hours = (postDate.getHours() >= 12) ? ('0' + (postDate.getHours()-11)).slice(-2) : ('0' + (postDate.getHours()+1)).slice(-2) ;
-						e.innerHTML = '<div class="tom-tile"><div class="tom-tweet">' + 
-							'<span class="img-twitter"></span><div class="tom-divider"></div>' +
-							twitter.tweet.text + 
-							'<div class="tom-divider"></div>' +
-							'<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>'
-							'</div></div>';
-						this.html[i] = e;
+					var tweet = twitter.tweet.text;
+
+					// Fill in some of the missing twitter information (links, mentions, *sigh* hashtags)
+					
+					// urls
+					for(var url in twitter.tweet.entities.urls) {
+						var defaultUrl = twitter.tweet.entities.urls[url].url;
+						var expandedUrl = twitter.tweet.entities.urls[url].expanded_url;
+						// add link attributes to expandedUrl
+						expandedUrl = '<a href="' + defaultUrl + '" target="_blank">' + expandedUrl + '</a>';
+						tweet = tweet.replace(defaultUrl, expandedUrl);
+					}
+					// user mentions
+					for(var user in twitter.tweet.entities.user_mentions) {
+						var defaultUser = twitter.tweet.entities.user_mentions[user].screen_name;
+						// add link attributes to user
+						var expandedUser = '<a href="https://twitter.com/' + defaultUser + '" target="_blank">' + defaultUser + '</a>';
+						tweet = tweet.replace('@' + defaultUser, '@' + expandedUser);
+					}
+
+					var classes = "tom-tile";
+					classes += " tom-tweet";
+					classes += (this.priority.twitter) ? " tom-priority-" + this.priority.twitter : '';
+					classes += (i == 0) ? " first" : '';
+					e.innerHTML = '<div class="' + classes + '"><div class="tom-tweet">' + 
+						'<span class="img-twitter"></span><div class="tom-divider"></div>' +
+						tweet + 
+						'<div class="tom-divider"></div>' +
+						'<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>'
+						'</div></div>';
+					this.html[i] = e;
 					i++;
 				}
 				if (data[entry].events !== undefined && this.methods.events == true)
@@ -155,7 +189,12 @@
 					var events = data[entry].events;
 					var postDate = new Date(events.date);
 					
-					var html = '<div class="tom-tile"><div class="tom-event">';
+					var classes = "tom-tile";
+					classes += " tom-event";
+					classes += (this.priority.events) ? " tom-priority-" + this.priority.events : '';
+					classes += (i == 0) ? " first" : '';
+
+					var html = '<div class="' + classes + '"><div class="tom-event">';
 					if (events.image !== undefined && events.image != null)
 					{
 						html += '<img src="' + events.image + '"/>';
@@ -179,7 +218,9 @@
 		// return how many columns
 		this.calculateColumns = function(windowWidth)
 		{
-			
+			/**
+			 * @todo Make this a lot more customizable
+			 */
 			if (windowWidth < 520)
 			{
 				this._currentColumns = 1;
@@ -404,12 +445,13 @@ docReady(function() {
 	$('#main-filters li a').on('click', function(e) {
 		e.preventDefault();
 		if ($(this).hasClass('tom-filter-active')) {
+			$(this).addClass('tom-filter-inactive');
 			$(this).removeClass('tom-filter-active');
-			console.log($(this).attr('data-tom-type'));
 			window.TOM.removeType($(this).attr('data-tom-type'));
 		}
 		else
 		{
+			$(this).removeClass('tom-filter-inactive');
 			$(this).addClass('tom-filter-active');
 			window.TOM.addType($(this).attr('data-tom-type'));
 		}
