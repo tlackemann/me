@@ -1,4 +1,5 @@
 <?php
+require_once('lib/Config.php'); #TomConfig class - you can probably figure out what goes in here
 require_once('lib/Database.php');
 require_once('lib/OAuth.php');
 require_once('lib/Twitter.php');
