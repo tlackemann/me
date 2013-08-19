@@ -555,10 +555,17 @@ docReady(function() {
 		//setTimeout(function() { msnry.layout() }, 500);
 	});
 
+	// Apply filters
+	$(window).on('hashchange', function() {
+		// fill in the search bar
+		var filter = window.location.hash.substr(1);
+		$('#tom-search-q').val(filter)
+		window.TOM.search(filter);
+	});
+
 	// Search form for the wall
 	$('body').on('submit', '#tom-search', function(e) {
 		e.preventDefault();
-
 		window.TOM.search($('#tom-search-q').val());
 	});
 
