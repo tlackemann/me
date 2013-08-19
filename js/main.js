@@ -114,20 +114,20 @@
 					classes += (this.priority.rss) ? " tom-priority-" + this.priority.rss : '';
 					classes += (i == 0) ? " first" : '';
 
-					html += '<a href="' + rss.link + '" target="_blank" class="' + classes + '"><span class="tom-rss">';
-					html += '<span class="tom-pixafy">' + rss.title + '</span><span class="tom-divider"></span>' + 
-								htmlDecode(rss.description + '') +
-							'<span class="tom-divider"></span>';
-
+					html += '<a href="' + rss.link + '" target="_blank" class="' + classes + '"><span class="tom-rss"><span class="img-file"></span>';
 					if (rss.guid.indexOf('pixafy',0) > 0)
 					{
-						html += '<span class="tom-date img-file">Pixafy - ' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>';
+						html += '<span class="tom-rss-source">Pixafy Blog</span>';
 					}
 					else
 					{
-						
-						html += '<span class="tom-date img-file">Personal Blog - ' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>';
+						html += '<span class="tom-rss-source">Personal Blog</span>';
 					}
+					html += '<span class="tom-rss-title">' + rss.title + '</span><span class="tom-divider"></span>' + 
+								'<p>' + htmlDecode(rss.description + '') + '</p>' +
+							'<span class="tom-divider"></span>';
+					html += '<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>';
+					
 					
 					html += '</span></a>';
 
@@ -149,7 +149,7 @@
 					e.innerHTML =
 						'<div class="' + classes + '"><div class="tom-instagram">' +
 							'<img src="' + instagram.images.low_resolution.url + '"/>' +
-							'<span class="tom-title">' + instagram.caption.text + '</span>' +
+							'<p>' + instagram.caption.text + '</p>' +
 							'<div class="tom-divider"></div>' + 
 							'<span class="tom-date img-instagram">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>' +
 						'</div></div>';
@@ -188,8 +188,8 @@
 					classes += (this.priority.twitter) ? " tom-priority-" + this.priority.twitter : '';
 					classes += (i == 0) ? " first" : '';
 					e.innerHTML = '<div class="' + classes + '"><div class="tom-tweet">' + 
-						'<span class="img-twitter"></span><div class="tom-divider"></div>' +
-						tweet + 
+						'<span class="img-twitter"></span>' +
+						'<span class="tom-tweet-text">' + tweet + '</span>' +
 						'<div class="tom-divider"></div>' +
 						'<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>'
 						'</div></div>';
