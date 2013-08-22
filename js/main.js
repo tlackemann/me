@@ -243,15 +243,15 @@
 				this._currentColumns = 2;
 				this._skipPriorities = true;
 			}
-			else if (windowWidth >= 720 && windowWidth < 1120)
+			else if (windowWidth >= 720 && windowWidth < 1020)
 			{
-				this._currentColumns = 3;
-				this._skipPriorities = false;
+				this._currentColumns = 4;
+				this._skipPriorities = true;
 			}
-			else if (windowWidth >= 1120)
+			else if (windowWidth >= 1020)
 			{
 				this._currentColumns = this.columns;
-				this._skipPriorities = false;
+				this._skipPriorities = true;
 			}
 		}
 
@@ -390,9 +390,13 @@
 			}
 			container.appendChild( fragment );
 			// Set the max-width
-			$('.tom-tile').not('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth - self.pagePadding ) }); 
-			$('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth * 2 ) - self.pagePadding }); 
-
+			//$('.tom-tile').not('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth - self.pagePadding ) }); 
+			//$('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth * 2 ) - self.pagePadding }); 
+			$('.tom-tile').css({ maxWidth: ( self.currentColumnWidth - self.pagePadding  ) }); 
+			if (!this._skipPriorities)
+			{
+				$('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth * 2 ) - self.pagePadding }); 
+			}
 			return elems;
 		},
 
