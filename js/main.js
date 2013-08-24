@@ -18,17 +18,17 @@
 		this.priority = {
 			'twitter'		: 0,
 			'instagram'		: 0,
-			'rss'			: 1,
+			'rss'			: 0,
 			'events'		: 0
 		},
 
 		this.fullScreen = true,	
 		this.columns = 6,
-		// this.columns = {
-		// 	'>920' : 5,
-		// 	'<920' : 3,
-		// 	'<500' : 1,
-		// },
+		this.responsiveColumns = {
+		 	'>920' : 5,
+		 	'<920' : 3,
+		 	'<500' : 1,
+		},
 		this.pagePadding = 30, 
 		this.ajaxLoader = '.tom-ajax',
 		this.defaultColumnWidth = 340,
@@ -226,10 +226,19 @@
 			//this.applyMasonry(255, true);
 		},
 
-		// Full size, set max width, figure out how many fit in window width
-		// return how many columns
+		/**
+		 * Calculates the column width for the current columns and determines
+		 * whether to skip priorities or not
+		 *
+		 * @param int windowWidth
+		 */
 		this.calculateColumns = function(windowWidth)
 		{
+			console.log(windowWidth/this.columns);
+
+
+			this._currentColumns = this.columns;
+			this._skipPriorities = true;
 			/**
 			 * @todo Make this a lot more customizable
 			 */
