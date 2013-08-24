@@ -160,7 +160,7 @@ html,body {
 .tom-page {
     margin:0 auto;
     width:100%;
-    /* max-width:1020px; */
+    max-width:600px;
 }
 .tom-ajax {
     background:url('../img/ajax-loader.gif') no-repeat;
@@ -212,7 +212,7 @@ html,body {
     font:18px/20px Georgia,"Times New Roman",Palatino,serif;
     float:left;
     background-color:#333;
-    width:200%;
+    width:300px;
     margin:5px;
     display:block;
     text-decoration:none;
@@ -265,7 +265,6 @@ html,body {
     display:block;
 }
 .tom-rss {
-    width:100%;
 }
 .tom-event,
 .tom-instagram,
@@ -291,8 +290,9 @@ html,body {
     color:#000;
 }
 #main {
-    margin:5px 0px;
+    margin:5px auto;
     background-color:#F1F2F4;
+    width:600px;
 }
 
 .tom-footer {

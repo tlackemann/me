@@ -22,8 +22,9 @@
 			'events'		: 0
 		},
 
-		this.fullScreen = true,	
-		this.columns = 6,
+		this.fullScreen = false,	
+		this.columns = 2,
+		this.responsize = false,
 		this.responsiveColumns = {
 		 	'>920' : 5,
 		 	'<920' : 3,
@@ -31,8 +32,8 @@
 		},
 		this.pagePadding = 30, 
 		this.ajaxLoader = '.tom-ajax',
-		this.defaultColumnWidth = 340,
-		this.defaultPageWidth = 1020,
+		this.defaultColumnWidth = 300,
+		this.defaultPageWidth = 600,
 		this.html = [],
 		this.container = '#main',
 		this.limit = 16,
@@ -234,35 +235,35 @@
 		 */
 		this.calculateColumns = function(windowWidth)
 		{
-			console.log(windowWidth/this.columns);
-
-
-			this._currentColumns = this.columns;
-			this._skipPriorities = true;
-			/**
-			 * @todo Make this a lot more customizable
-			 */
-			if (windowWidth < 680)
+			if (this.responsive)
 			{
-				this._currentColumns = 1;
-				this._skipPriorities = true;
+				if (windowWidth < 680)
+				{
+					this._currentColumns = 1;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 680 && windowWidth < 820)
+				{
+					this._currentColumns = this.columns - 4;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 820 && windowWidth < 990)
+				{
+					this._currentColumns = this.columns - 3;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 990 && windowWidth < 1600)
+				{
+					this._currentColumns = this.columns - 1;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 1600)
+				{
+					this._currentColumns = this.columns;
+					this._skipPriorities = true;
+				}
 			}
-			else if (windowWidth >= 680 && windowWidth < 820)
-			{
-				this._currentColumns = this.columns - 4;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 820 && windowWidth < 990)
-			{
-				this._currentColumns = this.columns - 3;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 990 && windowWidth < 1600)
-			{
-				this._currentColumns = this.columns - 1;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 1600)
+			else
 			{
 				this._currentColumns = this.columns;
 				this._skipPriorities = true;
@@ -273,7 +274,7 @@
 		{
 			var $columnWidth = 0;
 			var $windowWidth = window.innerWidth;
-
+			
 			this.calculateColumns($windowWidth);
 
 			if (this.fullScreen == true)
