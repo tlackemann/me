@@ -43,7 +43,7 @@ class Tom extends Database
 	 * If cache enabled, the method for which to store the data
 	 * Supported: file | redis
 	 */
-	protected $_cacheType = 'redis';
+	protected $_cacheType = 'file';
 
 	/**
 	 * If file cache enabled, the file path
