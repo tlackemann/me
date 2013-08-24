@@ -23,7 +23,7 @@
 		},
 
 		this.fullScreen = true,	
-		this.columns = 5,
+		this.columns = 6,
 		// this.columns = {
 		// 	'>920' : 5,
 		// 	'<920' : 3,
@@ -148,7 +148,7 @@
 					classes += (i == 0) ? " first" : '';
 					e.innerHTML =
 						'<div class="' + classes + '"><div class="tom-instagram">' +
-							'<img src="' + instagram.images.low_resolution.url + '"/>' +
+							'<img src="' + instagram.images.standard_resolution.url + '"/>' +
 							'<p>' + instagram.caption.text + '</p>' +
 							'<div class="tom-divider"></div>' + 
 							'<span class="tom-date img-instagram">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>' +
@@ -233,22 +233,27 @@
 			/**
 			 * @todo Make this a lot more customizable
 			 */
-			if (windowWidth < 520)
+			if (windowWidth < 680)
 			{
 				this._currentColumns = 1;
 				this._skipPriorities = true;
 			}
-			else if (windowWidth >= 520 && windowWidth < 720)
+			else if (windowWidth >= 680 && windowWidth < 820)
 			{
-				this._currentColumns = 2;
+				this._currentColumns = this.columns - 4;
 				this._skipPriorities = true;
 			}
-			else if (windowWidth >= 720 && windowWidth < 1020)
+			else if (windowWidth >= 820 && windowWidth < 990)
 			{
-				this._currentColumns = 4;
+				this._currentColumns = this.columns - 3;
 				this._skipPriorities = true;
 			}
-			else if (windowWidth >= 1020)
+			else if (windowWidth >= 990 && windowWidth < 1600)
+			{
+				this._currentColumns = this.columns - 1;
+				this._skipPriorities = true;
+			}
+			else if (windowWidth >= 1600)
 			{
 				this._currentColumns = this.columns;
 				this._skipPriorities = true;
@@ -290,7 +295,7 @@
 			var container = document.querySelector(this.container);
 			var msnry = Masonry.data(container);
 			var $size = parseInt(s);
-			msnry.option({columnWidth: $size });
+			msnry.option({ columnWidth: $size });
 			$('.tom-tile').css({ maxWidth: ( $size - this.pagePadding ) }); 
 			if (!this._skipPriorities)
 			{
@@ -355,7 +360,7 @@
 					// blahh
 					$('.tom-load-more').hide();
 				}
-			}, 1000);
+			}, 300);
 			
 		},
 
@@ -529,8 +534,9 @@
 	}
 })();
 
-docReady(function() {
-	// Run the main function
+
+$(document).ready(function() {
+  // Run the main function
 	window.TOM.callApi();
 
 	$('#main-filters li a').on('click', function(e) {
@@ -596,8 +602,8 @@ docReady(function() {
 			}
 		}
 	});
-
 });
+
 function htmlEncode(value){
   //create a in-memory div, set it's inner text(which jQuery automatically encodes)
   //then grab the encoded contents back out.  The div never exists on the page.

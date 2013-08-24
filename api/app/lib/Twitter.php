@@ -39,16 +39,9 @@ class Twitter
 		$i = 0;
 		foreach($this->_tweets as $tweet)
 		{
-			if (!in_array($tweet, $cached))
-			{
-				$results[$i]['tweet'] = $this->_connection->get("statuses/show", array('id' => $tweet->id, 'trim_user' => 'true'));
-				$results[$i]['created_at'] = $tweet->created_at;
-				$i++;
-			}
-			else
-			{
-				// store cached tweet without retrieving
-			}
+			$results[$i]['tweet'] = $this->_connection->get("statuses/show", array('id' => $tweet->id, 'trim_user' => 'true'));
+			$results[$i]['created_at'] = $tweet->created_at;
+			$i++;
 		}
 
 		return $results;

@@ -291,6 +291,7 @@ html,body {
     color:#000;
 }
 #main {
+    margin:5px 0px;
     background-color:#F1F2F4;
 }
 
@@ -544,8 +545,40 @@ form.search fieldset input[type="submit"]:active {
 
 }                          
 
-
-@media (max-width: 520px) {
+@media (max-width: 990px) {
+    .tom-search {
+        width:30%;
+    }
+}
+@media (max-width: 820px) {
+    .tom-search {
+        display:none;
+    }
+    .tom-subname,
+    .tom-name {
+        text-align:center;
+    }
+    #main-nav {
+        visibility: hidden;
+    }
+    #main-filters {
+        display:none;
+    }
+}
+@media (max-width: 680px) {
+    .tom-search {
+        display:none;
+    }
+    .tom-subname,
+    .tom-name {
+        text-align:center;
+    }
+    #main-nav {
+        visibility: hidden;
+    }
+    #main-filters {
+        display:none;
+    }
 
     .tom-col-1,
     .tom-col-2,
