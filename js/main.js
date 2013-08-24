@@ -2,19 +2,37 @@
 
 ;(function() {
 	var TOM = function() {
-
+		/**
+		 * Reference to self for anonomous functions
+		 */
 		var self = this;
+
+		/**
+		 * The container on which to call masonry
+		 */
+		this.container = '#main',
+
+		/**
+		 * URL Route to API index.php
+		 */
 		this.api = 'api/',
+
+		/**
+		 * Enable or disable social networks
+		 */
 		this.methods = {
 			'twitter'		: true, 	// Twitter API v.1.1 (OAuth)
 			'instagram' 	: true, 	// Instagram API (OAuth)
 			'rss'			: true, 	// RSS Feeds
 			'events'		: true, 	// Events Feeds
-			'bandcamp'		: false,	// Bandcamp API
-			'soundcloud'	: false,	// Soundcloud API
-			'facebook'		: false,	// Facebook API (OAuth)
+			// 'bandcamp'		: false,	// Bandcamp API
+			// 'soundcloud'	: false,	// Soundcloud API
+			// 'facebook'		: false,	// Facebook API (OAuth)
 		},
 
+		/**
+		 * Priorities will render larger tiles (0-10)
+		 */
 		this.priority = {
 			'twitter'		: 0,
 			'instagram'		: 0,
@@ -22,29 +40,62 @@
 			'events'		: 0
 		},
 
-		this.fullScreen = true,	
+		/**
+		 * Amount of tiles to load at a time
+		 */ 
+		this.limit = 16,
+
+		/**
+		 * Responsive Design - Configure the below variables to setup a static
+		 * or responsive timeline. 
+		 * 
+		 * responsive: Enable/disable responsiveness
+		 * fullScreen: Use the full window width
+		 * columns: Columns to render (responsive will automatically calculate
+		 *          the other columns based on window width)
+		 * pagePadding: The total padding to subtract from the tiles and page
+		 * defaultColumnWidth: Column width (Ignored if responsive enabled)
+		 * defaultPageWidth: Page width (Ignored if responsive enabled)
+		 */
+		this.responsive = true,
+		this.fullScreen = true,
 		this.columns = 6,
-		this.responsiveColumns = {
-		 	'>920' : 5,
-		 	'<920' : 3,
-		 	'<500' : 1,
-		},
 		this.pagePadding = 30, 
-		this.ajaxLoader = '.tom-ajax',
 		this.defaultColumnWidth = 340,
 		this.defaultPageWidth = 1020,
-		this.html = [],
-		this.container = '#main',
-		this.limit = 16,
-		this.loadMore = false,
+
+		/**
+		 * Ajax loader
+		 */
+		this.ajaxLoader = '.tom-ajax',
+
+		/**
+		 * Misc.
+		 * 
+		 * _currentColumnWidth: Stores the current column width
+		 * _offset: Stores how many tiles we've loaded so far
+		 * _currentColumns: Stores how many columns we're currently rendering
+		 * _skipPriorities: Skip priorities for low column counts
+		 * _data: The data that was loaded from the ajax call
+		 * _search: The search query (if any)
+		 * _html: The current HTML stored for rendering
+		 * _loadMore: Flag to determine whether to display "Load More"
+		 */
+		this._currentColumnWidth = 0,
 		this._offset = 0,
 		this._currentColumns = 0,
 		this._skipPriorities = 0,
 		this._data = '',
 		this._search = '',
-		this.currentColumnWidth = 0,
+		this._html = [],
+		this._loadMore = false,
 
-
+		/**
+		 * Initial call to ToM. Determines the parameters to pass, starts the
+		 * ajax loader, calls the API, and renders the timeline.
+		 *
+		 * @return void
+		 */
 		this.callApi = function() {
 			// determine which methods to run
 			var _params = '?';
@@ -66,8 +117,10 @@
 					self._data = data;
 
 					// obey search parameters if we have any
-					// at this point it's easier to filter everything through js
-					// if this is a bad idea then i'll switch to php searching and multiple ajax calls
+					// at this point it's easier to filter everything through
+					// js (since we load everything at once). if this is a bad
+					// idea then i'll switch to php searching and multiple ajax
+					// calls
 					if (self._search) {
 						self.search(self._search);
 					}
@@ -79,19 +132,36 @@
 			});
 		},
 
+		/**
+		 * Starts the ajax loader
+		 *
+		 * @return void
+		 */
 		this.startAjaxLoader = function()
 		{
 			$(this.ajaxLoader).show();
 		},
+
+		/**
+		 * Stops the ajax loader
+		 *
+		 * @return void
+		 */
 		this.killAjaxLoader = function()
 		{
 			$(self.ajaxLoader).hide();
 		},
 
+		/**
+		 * Renders a timeline based on data passed in then instantiates masonry
+		 *
+		 * @param array data; JSON data from ToM API call
+		 * @return void
+		 */
 		this.renderTimeline = function(data) {
 			// clear any data if any exists
 			$(this.container).html('');
-			this.html = [];
+			this._html = [];
 
 			var i = 0;
 			var t = 0;
@@ -108,7 +178,7 @@
 					var hours = (postDate.getHours() >= 12) ? ('0' + (postDate.getHours()-11)).slice(-2) : ('0' + (postDate.getHours()+1)).slice(-2) ;
 
 					var html = '';
-					//this.html[i] =
+					//this._html[i] =
 					var classes = "tom-tile";
 					classes += " tom-rss";
 					classes += (this.priority.rss) ? " tom-priority-" + this.priority.rss : '';
@@ -132,7 +202,7 @@
 					html += '</span></a>';
 
 					e.innerHTML = html;
-					this.html[i] = e;
+					this._html[i] = e;
 					i++;
 				}
 				if (data[entry].instagram !== undefined && this.methods.instagram == true)
@@ -153,7 +223,7 @@
 							'<div class="tom-divider"></div>' + 
 							'<span class="tom-date img-instagram">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>' +
 						'</div></div>';
-					this.html[i] = e;
+					this._html[i] = e;
 					i++;
 				}
 				if (data[entry].twitter !== undefined && this.methods.twitter == true)
@@ -193,7 +263,7 @@
 						'<div class="tom-divider"></div>' +
 						'<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>'
 						'</div></div>';
-					this.html[i] = e;
+					this._html[i] = e;
 					i++;
 				}
 				if (data[entry].events !== undefined && this.methods.events == true)
@@ -217,7 +287,7 @@
 					html += '</div></div>';
 					e.innerHTML = html;
 					html = '';
-					this.html[i] = e;
+					this._html[i] = e;
 					i++;
 				}
 				
@@ -231,44 +301,53 @@
 		 * whether to skip priorities or not
 		 *
 		 * @param int windowWidth
+		 * @return void
 		 */
 		this.calculateColumns = function(windowWidth)
 		{
-			console.log(windowWidth/this.columns);
-
-
-			this._currentColumns = this.columns;
-			this._skipPriorities = true;
 			/**
 			 * @todo Make this a lot more customizable
 			 */
-			if (windowWidth < 680)
+			if (this.responsive)
 			{
-				this._currentColumns = 1;
-				this._skipPriorities = true;
+				if (windowWidth < 680)
+				{
+					this._currentColumns = 1;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 680 && windowWidth < 820)
+				{
+					this._currentColumns = this.columns - 4;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 820 && windowWidth < 990)
+				{
+					this._currentColumns = this.columns - 3;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 990 && windowWidth < 1600)
+				{
+					this._currentColumns = this.columns - 1;
+					this._skipPriorities = true;
+				}
+				else if (windowWidth >= 1600)
+				{
+					this._currentColumns = this.columns;
+					this._skipPriorities = true;
+				}
 			}
-			else if (windowWidth >= 680 && windowWidth < 820)
-			{
-				this._currentColumns = this.columns - 4;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 820 && windowWidth < 990)
-			{
-				this._currentColumns = this.columns - 3;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 990 && windowWidth < 1600)
-			{
-				this._currentColumns = this.columns - 1;
-				this._skipPriorities = true;
-			}
-			else if (windowWidth >= 1600)
+			else
 			{
 				this._currentColumns = this.columns;
 				this._skipPriorities = true;
 			}
 		}
 
+		/**
+		 * Returns the new column width
+		 *
+		 * @return int
+		 */
 		this.resizeColumn = function()
 		{
 			var $columnWidth = 0;
@@ -279,7 +358,7 @@
 			if (this.fullScreen == true)
 			{
 				$columnWidth = (($windowWidth / this._currentColumns));
-				this.currentColumnWidth = $columnWidth;
+				this._currentColumnWidth = $columnWidth;
 				return $columnWidth;
 			}
 			else
@@ -292,13 +371,19 @@
 				{
 					$columnWidth = $windowWidth / this._currentColumns;
 				}
-				this.currentColumnWidth = $columnWidth;
+				this._currentColumnWidth = $columnWidth;
 				return $columnWidth;
 			}
 			
 
 		},
 
+		/**
+		 * Applys a new column width to masonry, obeying priorities if needed
+		 *
+		 * @param int|string s
+		 * @return void
+		 */
 		this.applyResize = function(s)
 		{
 			var container = document.querySelector(this.container);
@@ -312,6 +397,11 @@
 			}
 		},
 
+		/**
+		 * Initiates masonry (o rly?) and determines to display "Load More"
+		 *
+		 * @return void
+		 */
 		this.initiateMasonry = function()
 		{
 			var $columnWidth = self.resizeColumn();
@@ -328,9 +418,9 @@
 
 			// Reset load more
 			this.setLoadMore(false);
-			for (var e in this.html)
+			for (var e in this._html)
 			{
-				var elem = this.html[e];
+				var elem = this._html[e];
 				if (e >= this.limit)
 				{
 					this.setLoadMore(true);
@@ -373,6 +463,11 @@
 			
 		},
 
+		/**
+		 * Loads more elements based on the set limit and renders new tiles
+		 *
+		 * @return array; Array of DOM elements
+		 */
 		this.loadMoreElements = function ()
 		{
 			var container = document.querySelector(this.container);
@@ -381,19 +476,19 @@
 			var elems = [];
 			var fragment = document.createDocumentFragment();
 
-			for (var e in this.html)
+			for (var e in this._html)
 			{
 				
 				if (e > this._offset && i < this.limit)
 				{
-					var elem = this.html[e];
+					var elem = this._html[e];
 					fragment.appendChild( elem );
 					elems.push( elem );
 					this._offset++;
 					i++;
 
 					var count = parseInt(e);
-					if (count + 1 >= this.html.length)
+					if (count + 1 >= this._html.length)
 					{
 						var loadMore = document.querySelector('.tom-load-more');
 						loadMore.style.display = 'none';
@@ -404,16 +499,22 @@
 			}
 			container.appendChild( fragment );
 			// Set the max-width
-			//$('.tom-tile').not('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth - self.pagePadding ) }); 
-			//$('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth * 2 ) - self.pagePadding }); 
-			$('.tom-tile').css({ maxWidth: ( self.currentColumnWidth - self.pagePadding  ) }); 
+			//$('.tom-tile').not('.tom-priority-1').css({ maxWidth: ( self._currentColumnWidth - self.pagePadding ) }); 
+			//$('.tom-priority-1').css({ maxWidth: ( self._currentColumnWidth * 2 ) - self.pagePadding }); 
+			$('.tom-tile').css({ maxWidth: ( self._currentColumnWidth - self.pagePadding  ) }); 
 			if (!this._skipPriorities)
 			{
-				$('.tom-priority-1').css({ maxWidth: ( self.currentColumnWidth * 2 ) - self.pagePadding }); 
+				$('.tom-priority-1').css({ maxWidth: ( self._currentColumnWidth * 2 ) - self.pagePadding }); 
 			}
 			return elems;
 		},
 
+		/**
+		 * Adds a filter to the timeline and calls the API
+		 *
+		 * @param string type
+		 * @return void
+		 */
 		this.addType = function(type)
 		{
 			switch (type) {
@@ -433,6 +534,12 @@
 			this.callApi();
 		},
 
+		/**
+		 * Removes a filter from the timeline and calls the API
+		 *
+		 * @param string type
+		 * @return void
+		 */
 		this.removeType = function(type)
 		{
 			switch (type) {
@@ -452,18 +559,32 @@
 			this.callApi();
 		}
 
+		/**
+		 * Set whether or not we need to load more elements
+		 *
+		 * @param int loadMore
+		 * @return void
+		 */
 		this.setLoadMore = function(loadMore)
 		{
-			this.loadMore = loadMore;
+			this._loadMore = loadMore;
 		},
 
+		/**
+		 * Get whether or not we need to load more elements
+		 *
+		 * @return int
+		 */
 		this.canLoadMore = function()
 		{
-			return this.loadMore;
+			return this._loadMore;
 		},
+
 		/** 
-		 * Search our JSON array 
+		 * Simulate calling the API by starting the ajax loader and searching
+		 * the loaded JSON array and re-rendering the timeline
 		 *
+		 * @param string search
 		 */
 		this.search = function(search)
 		{
@@ -530,9 +651,9 @@
 
 	}
 
-	
-	
-
+	/**
+	 * DONE! Load the object into our window
+	 */
 	if (!window.TOM)
 	{
 		window.TOM = new TOM();
@@ -545,7 +666,7 @@
 
 
 $(document).ready(function() {
-  // Run the main function
+  	/* Run the object ~(^_^)~ */
 	window.TOM.callApi();
 
 	$('#main-filters li a').on('click', function(e) {
@@ -604,7 +725,7 @@ $(document).ready(function() {
 			}
 			else
 			{
-				if (window.TOM.currentColumnWidth < window.TOM.defaultColumnWidth)
+				if (window.TOM._currentColumnWidth < window.TOM.defaultColumnWidth)
 				{
 					window.TOM.applyResize(window.TOM.defaultColumnWidth);
 				}
