@@ -630,13 +630,13 @@ class Tom extends Database
 	{
 		$events = array(
 			array(
-				'name' 	=> 'Happy 23<sup>rd</sup> Birthday',
-				'image' => 'http://whoistom.me/img/IMG6863-4-L.jpg',
+				'name' 	=> 'Happy 23<sup>rd</sup> Birthday to me',
+				'image' => 'http://whoistom.me/img/a-whole-lot-of-beer.jpg',
 				'date'	=> 'June 19, 2012 10:34:00'
 			),
 			array(
-				'name'	=> 'Magento Certified Developer Plus',
-				'image' => 'http://whoistom.me/img/magento-denise.jpg',
+				'name'	=> 'Received Magento Developer Plus Certification!',
+				'image' => 'http://whoistom.me/img/magento-certified-dev-plus.jpg',
 				'date'	=> 'July 10, 2013 12:00:00'
 			)
 		);

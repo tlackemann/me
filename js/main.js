@@ -217,12 +217,12 @@
 					classes += (this.priority.instagram) ? " tom-priority-" + this.priority.instagram : '';
 					classes += (i == 0) ? " first" : '';
 					e.innerHTML =
-						'<div class="' + classes + '"><div class="tom-instagram">' +
+						'<a href="' + instagram.link + '" target="_blank" class="' + classes + '"><span class="tom-instagram">' +
 							'<img src="' + instagram.images.standard_resolution.url + '"/>' +
 							'<p>' + instagram.caption.text + '</p>' +
-							'<div class="tom-divider"></div>' + 
+							'<span class="tom-divider"></span>' + 
 							'<span class="tom-date img-instagram">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>' +
-						'</div></div>';
+						'</span></a>';
 					this._html[i] = e;
 					i++;
 				}
@@ -257,12 +257,12 @@
 					classes += " tom-tweet";
 					classes += (this.priority.twitter) ? " tom-priority-" + this.priority.twitter : '';
 					classes += (i == 0) ? " first" : '';
-					e.innerHTML = '<div class="' + classes + '"><div class="tom-tweet">' + 
-						'<span class="img-twitter"></span>' +
+					e.innerHTML = '<div class="' + classes + '"><span class="tom-tweet">' + 
+						'<a href="https://twitter.com/tlackemann" class="img-twitter" target="_blank"></a>' +
 						'<span class="tom-tweet-text">' + tweet + '</span>' +
-						'<div class="tom-divider"></div>' +
+						'<span class="tom-divider"></span>' +
 						'<span class="tom-date">' + postDate.toDateString() + ' at ' + hours + ':' + ('0' + (postDate.getMinutes()+1)).slice(-2) + ' ' + amPm.toUpperCase() + '</span>'
-						'</div></div>';
+						'</span></div>';
 					this._html[i] = e;
 					i++;
 				}
